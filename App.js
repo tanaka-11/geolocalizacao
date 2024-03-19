@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Platform, Text, View, StyleSheet } from "react-native";
-
+import { StyleSheet, Text, View, Dimensions } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
 export default function App() {
@@ -9,15 +9,9 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      if (Platform.OS === "android" && !Device.isDevice) {
-        setErrorMsg(
-          "Oops, this will not work on Snack in an Android Emulator. Try it on your device!"
-        );
-        return;
-      }
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        setErrorMsg("Permissão de localização negada");
         return;
       }
 
@@ -26,11 +20,32 @@ export default function App() {
     })();
   }, []);
 
-  let text = "Waiting..";
+  let text = "Aguardando permissões...";
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
-    text = JSON.stringify(location);
+    return (
+      <View style={styles.container}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+            title="Sua Localização"
+            description="Você está aqui"
+          />
+        </MapView>
+      </View>
+    );
   }
 
   return (
@@ -43,12 +58,16 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   paragraph: {
     fontSize: 18,
     textAlign: "center",
+  },
+  map: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
   },
 });
