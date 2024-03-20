@@ -15,29 +15,39 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      // Variavel guardando a permisão
       let { status } = await Location.requestForegroundPermissionsAsync();
+
+      // Condicional para localização negada
       if (status !== "granted") {
         setErrorMsg("Permissão de localização negada");
         return;
       }
 
+      // Variavel guardando localização inicial recebendo a localização atual
       let initialLocation = await Location.getCurrentPositionAsync({});
+
+      // State
       setInitialLocation(initialLocation);
       setCurrentLocation(initialLocation);
     })();
   }, []);
 
+  // UseEffect com parametro para funcionamento da localização atual
   useEffect(() => {
+    // Condicional
     if (currentLocation) {
-      const { latitude, longitude } = currentLocation.coords;
+      const { latitude, longitude } = currentLocation.coords; // Objeto com mais informações da latitude e longitude.
+
+      // Animação do mapa
       mapRef.current.animateToRegion({
         latitude,
         longitude,
         latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        longitudeDelta: 0.05,
       });
     }
-  }, [currentLocation]);
+  }, [currentLocation]); // Parametro (currentLocation)
 
   const mapRef = React.createRef();
 
@@ -110,6 +120,7 @@ export default function App() {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        region={region}
       >
         {initialLocation && (
           <Marker
