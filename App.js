@@ -37,7 +37,7 @@ export default function App() {
   useEffect(() => {
     // Condicional
     if (currentLocation) {
-      const { latitude, longitude } = currentLocation.coords; // Objeto com mais informações da latitude e longitude.
+      const { latitude, longitude } = currentLocation.coords; // Objeto com mais informações da latitude e longitude
 
       // Animação do mapa
       mapRef.current.animateToRegion({
@@ -90,7 +90,7 @@ export default function App() {
     };
   };
 
-  // Função para parar gravação
+  // Função parar gravação
   const stopRecording = () => {
     // Atualização dos states
     setIsRecording(false);
@@ -120,7 +120,7 @@ export default function App() {
     // Constante guardando a distancia final
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-    // Distancia recebendo o Raio vezes a distancia final
+    // Distancia recebendo o raio vezes a distancia final
     const distance = R * c;
 
     // Retornando a const Distancia
@@ -148,8 +148,8 @@ export default function App() {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        region={region}
       >
+        {/* Localização Inicial  */}
         {initialLocation && (
           <Marker
             coordinate={{
@@ -160,6 +160,8 @@ export default function App() {
             description="Você começou aqui"
           />
         )}
+
+        {/* Localização Atual */}
         {currentLocation && (
           <Marker
             coordinate={{
@@ -172,12 +174,16 @@ export default function App() {
             )} km em ${formatTime(elapsedTime)}`}
           />
         )}
+
+        {/* Marcador de percuso */}
         <Polyline
           coordinates={coordinates}
           strokeWidth={5}
           strokeColor="rgba(255,0,0,0.5)"
         />
       </MapView>
+
+      {/* Botão de gravação */}
       <View style={styles.buttonContainer}>
         {isRecording ? (
           <Button title="Parar Gravação" onPress={stopRecording} />
