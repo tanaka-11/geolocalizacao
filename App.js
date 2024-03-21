@@ -30,7 +30,7 @@ export default function App() {
       // State
       setInitialLocation(initialLocation);
       setCurrentLocation(initialLocation);
-    })();
+    })(); // Função imediata para o Effect funcionar como um async/await
   }, []);
 
   // UseEffect com parametro para funcionamento da localização atual
