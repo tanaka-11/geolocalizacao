@@ -135,9 +135,11 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {/* Componente do map */}
       <MapView
         ref={mapRef}
         style={styles.map}
+        // Parametro de região inicial recebendo objeto com state de localização inicial
         initialRegion={{
           latitude: initialLocation
             ? initialLocation.coords.latitude
@@ -149,7 +151,7 @@ export default function App() {
           longitudeDelta: 0.0421,
         }}
       >
-        {/* Localização Inicial  */}
+        {/* Localização Inicial com condicional para aparecer o Maker na primeira localização */}
         {initialLocation && (
           <Marker
             coordinate={{
@@ -161,7 +163,7 @@ export default function App() {
           />
         )}
 
-        {/* Localização Atual */}
+        {/* Localização Atual para aparecer o Maker na localização atual */}
         {currentLocation && (
           <Marker
             coordinate={{
@@ -169,6 +171,7 @@ export default function App() {
               longitude: currentLocation.coords.longitude,
             }}
             title="Sua Localização Atual"
+            // Mostrando valores de quantos km e tempo que o usuario andou
             description={`Você andou ${totalDistance.toFixed(
               2
             )} km em ${formatTime(elapsedTime)}`}
