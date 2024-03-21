@@ -4,14 +4,14 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 
 export default function App() {
-  const [initialLocation, setInitialLocation] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [totalDistance, setTotalDistance] = useState(0);
-  const [startTime, setStartTime] = useState(null);
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [isRecording, setIsRecording] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [coordinates, setCoordinates] = useState([]);
+  const [initialLocation, setInitialLocation] = useState(null); // Localização Inicial
+  const [currentLocation, setCurrentLocation] = useState(null); // Localização Atual
+  const [totalDistance, setTotalDistance] = useState(0); // Distancia Total
+  const [startTime, setStartTime] = useState(null); // Começar Contagem
+  const [elapsedTime, setElapsedTime] = useState(0); // Pausa
+  const [isRecording, setIsRecording] = useState(false); // Gravando
+  const [errorMsg, setErrorMsg] = useState(null); // Mensagem de Erro
+  const [coordinates, setCoordinates] = useState([]); // Cordenadas
 
   useEffect(() => {
     (async () => {
@@ -49,29 +49,40 @@ export default function App() {
     }
   }, [currentLocation]); // Parametro (currentLocation)
 
-  const mapRef = React.createRef();
+  const mapRef = React.createRef(); // Guardando a referencia no mapRef
 
+  // Função para começar a gravar
   const startRecording = async () => {
+    // Variavel guardando a função de localização atual
     let initialLocation = await Location.getCurrentPositionAsync({});
+
+    // States
     setInitialLocation(initialLocation);
     setCurrentLocation(initialLocation);
     setStartTime(new Date().getTime());
     setIsRecording(true);
     setCoordinates([initialLocation.coords]);
 
+    // Variavel guardando função que monitora o movimento do usuario com o primeiro parametro de objeto vazio que recebe a option "default" e uma callback
     let subscriber = await Location.watchPositionAsync({}, (newLocation) => {
+      // Atualização do state recebendo a nova localização
       setCurrentLocation(newLocation);
+
+      // Variavel distancia guardando a função de calcular a distancia
       let distance = calculateDistance(
         initialLocation.coords.latitude,
         initialLocation.coords.longitude,
         newLocation.coords.latitude,
         newLocation.coords.longitude
       );
+
+      // States
       setTotalDistance(totalDistance + distance);
       setElapsedTime((new Date().getTime() - startTime) / 1000);
       setCoordinates([...coordinates, newLocation.coords]);
     });
 
+    // Die
     return () => {
       if (subscriber) {
         subscriber.remove();
@@ -79,27 +90,44 @@ export default function App() {
     };
   };
 
+  // Função para parar gravação
   const stopRecording = () => {
+    // Atualização dos states
     setIsRecording(false);
     setTotalDistance(0);
     setElapsedTime(0);
   };
 
+  // Função para calcular distancia
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    // Raio da Terra
     const R = 6371;
+
+    // Distancia da Latitude
     const dLat = (lat2 - lat1) * (Math.PI / 180);
+
+    // Distancia da Longitude
     const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+    // Constante guardando a primeira parte da formula de Haversine
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
         Math.cos(lat2 * (Math.PI / 180)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
+
+    // Constante guardando a distancia final
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    // Distancia recebendo o Raio vezes a distancia final
     const distance = R * c;
+
+    // Retornando a const Distancia
     return distance;
   };
 
+  // Tratativa de erros
   let text = "Aguardando permissões...";
   if (errorMsg) {
     text = errorMsg;
