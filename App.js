@@ -42,8 +42,8 @@ export default function App() {
       let initialLocation = await Location.getCurrentPositionAsync({});
 
       // State
-      setInitialLocation(initialLocation);
-      setCurrentLocation(initialLocation);
+     /*  setInitialLocation(initialLocation); */
+      /* setCurrentLocation(initialLocation); */
     })(); // Função imediata para o Effect funcionar como um async/await
   }, []);
 
