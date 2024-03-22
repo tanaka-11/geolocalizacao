@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState } from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 const App = () => {
   const [locationIndex, setLocationIndex] = useState(0);
@@ -13,7 +13,7 @@ const App = () => {
 
   // Função para alternar entre as localizações
   const toggleLocation = () => {
-    setLocationIndex(prevIndex => (prevIndex === 0 ? 1 : 0));
+    setLocationIndex((prevIndex) => (prevIndex === 0 ? 1 : 0));
   };
 
   return (
@@ -53,15 +53,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: 20,
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     padding: 10,
     borderRadius: 5,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });
