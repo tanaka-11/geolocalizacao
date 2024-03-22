@@ -6,27 +6,36 @@ export default function App() {
   const [totalDistance, setTotalDistance] = useState(0); // Total Distance
   const [coordinates, setCoordinates] = useState([]); // Coordinates
 
-  // Fixed coordinates for SP and Santos
+  // Cordenadas fixas de SP e Santos
   const saoPauloCoords = { latitude: -23.55052, longitude: -46.633308 };
   const santosCoords = { latitude: -23.96083, longitude: -46.333057 };
 
-  // Calculate distance between two points
+  // Calculando a distancia entre dois pontos com a formula de Harvesine
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; // Radius of the Earth in km
+    const R = 6371; // Raio da terra em Km
+
+    // Distancia Latitude
     const dLat = (lat2 - lat1) * (Math.PI / 180);
+
+    // Distancia Longitude
     const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+    // Primeira parte da formula
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
         Math.cos(lat2 * (Math.PI / 180)) *
         Math.sin(dLon / 2) *
         Math.sin(dLon / 2);
+
+    // Segunda parte da formula
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; // Distance in km
+
+    const distance = R * c; // Distancia em km
     return distance;
   };
 
-  // Calculate and set total distance
+  // Calculando e atualizando state de distancia
   const calculateTotalDistance = () => {
     const distance = calculateDistance(
       saoPauloCoords.latitude,
@@ -49,11 +58,11 @@ export default function App() {
           longitudeDelta: 0.8,
         }}
       >
-        {/* Marker for São Paulo */}
+        {/* Marker para São Paulo */}
         <Marker coordinate={saoPauloCoords} title="São Paulo" />
-        {/* Marker for Santos */}
+        {/* Marker para Santos */}
         <Marker coordinate={santosCoords} title="Santos" />
-        {/* Polyline showing the route between SP and Santos */}
+        {/* Linha traçada entre São paulo e Santos */}
         <Polyline
           coordinates={coordinates}
           strokeWidth={5}
