@@ -17,7 +17,10 @@ export default function App() {
     const dLon = (lon2 - lon1) * (Math.PI / 180);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in km
     return distance;
@@ -25,26 +28,45 @@ export default function App() {
 
   // Calculate and set total distance
   const calculateTotalDistance = () => {
-    const distance = calculateDistance(saoPauloCoords.latitude, saoPauloCoords.longitude, santosCoords.latitude, santosCoords.longitude);
+    const distance = calculateDistance(
+      saoPauloCoords.latitude,
+      saoPauloCoords.longitude,
+      santosCoords.latitude,
+      santosCoords.longitude
+    );
     setTotalDistance(distance);
     setCoordinates([saoPauloCoords, santosCoords]);
   };
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={{ latitude: -23.7, longitude: -46.6, latitudeDelta: 0.8, longitudeDelta: 0.8 }}>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: -23.7,
+          longitude: -46.6,
+          latitudeDelta: 0.8,
+          longitudeDelta: 0.8,
+        }}
+      >
         {/* Marker for São Paulo */}
         <Marker coordinate={saoPauloCoords} title="São Paulo" />
         {/* Marker for Santos */}
         <Marker coordinate={santosCoords} title="Santos" />
         {/* Polyline showing the route between SP and Santos */}
-        <Polyline coordinates={coordinates} strokeWidth={5} strokeColor="rgba(255,0,0,0.5)" />
+        <Polyline
+          coordinates={coordinates}
+          strokeWidth={5}
+          strokeColor="rgba(255,0,0,0.5)"
+        />
       </MapView>
       <View style={styles.buttonContainer}>
         <Button title="Calculate Distance" onPress={calculateTotalDistance} />
       </View>
       <View style={styles.distanceContainer}>
-        <Text style={styles.distanceText}>Total Distance: {totalDistance.toFixed(2)} km</Text>
+        <Text style={styles.distanceText}>
+          Total Distance: {totalDistance.toFixed(2)} km
+        </Text>
       </View>
     </View>
   );
