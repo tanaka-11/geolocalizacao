@@ -4,6 +4,7 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 
 export default function App() {
   const [totalDistance, setTotalDistance] = useState(0); // Total Distance
+  const [velocity, setVelocity] = useState(0); // Velocity
   const [coordinates, setCoordinates] = useState([]); // Coordinates
 
   // Cordenadas fixas de SP e Santos
@@ -35,7 +36,7 @@ export default function App() {
     return distance;
   };
 
-  // Calculando e atualizando state de distancia
+  // Calculando e atualizando state de distancia e velocidade
   const calculateTotalDistance = () => {
     const distance = calculateDistance(
       saoPauloCoords.latitude,
@@ -43,39 +44,68 @@ export default function App() {
       santosCoords.latitude,
       santosCoords.longitude
     );
+    const speed = calculateVelocity(distance); // Calculando a velocidade com base na distância
     setTotalDistance(distance);
+    setVelocity(speed);
     setCoordinates([saoPauloCoords, santosCoords]);
+  };
+
+  // Função para calcular a velocidade média em Km/h
+  const calculateVelocity = (distance) => {
+    const time = 1; // Tempo em horas (neste caso, 1 hora)
+    if (distance === 0) return 0;
+
+    const speed = distance / time; // Distância dividida pelo tempo
+    return speed.toFixed(1); // Limitando para 2 casas decimais
   };
 
   return (
     <View style={styles.container}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: -23.7,
-          longitude: -46.6,
-          latitudeDelta: 0.8,
-          longitudeDelta: 0.8,
-        }}
-      >
-        {/* Marker para São Paulo */}
-        <Marker coordinate={saoPauloCoords} title="São Paulo" />
-        {/* Marker para Santos */}
-        <Marker coordinate={santosCoords} title="Santos" />
-        {/* Linha traçada entre São paulo e Santos */}
-        <Polyline
-          coordinates={coordinates}
-          strokeWidth={5}
-          strokeColor="rgba(255,0,0,0.5)"
-        />
-      </MapView>
-      <View style={styles.buttonContainer}>
-        <Button title="Calculate Distance" onPress={calculateTotalDistance} />
+      <View style={styles.clima}>
+        <Text style={styles.textoClima}>20º</Text>
       </View>
-      <View style={styles.distanceContainer}>
-        <Text style={styles.distanceText}>
-          Total Distance: {totalDistance.toFixed(2)} km
-        </Text>
+
+      <View style={styles.cronometro}>
+        <Text style={styles.textoCronometro}>25:00</Text>
+      </View>
+
+      <View style={styles.subContainer}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: -23.7,
+            longitude: -46.6,
+            latitudeDelta: 0.8,
+            longitudeDelta: 0.8,
+          }}
+        >
+          {/* Marker para São Paulo */}
+          <Marker coordinate={saoPauloCoords} title="São Paulo" />
+          {/* Marker para Santos */}
+          <Marker coordinate={santosCoords} title="Santos" />
+          {/* Linha traçada entre São paulo e Santos */}
+          <Polyline
+            coordinates={coordinates}
+            strokeWidth={5}
+            strokeColor="rgba(255,0,0,0.5)"
+          />
+        </MapView>
+      </View>
+
+      <View style={styles.marcadores}>
+        <View style={styles.distancia}>
+          <Text style={styles.text}>Distância</Text>
+          <Text style={styles.text}>{totalDistance.toFixed(2)} km</Text>
+        </View>
+
+        <View style={styles.velocidade}>
+          <Text style={styles.text}>Velocidade</Text>
+          <Text style={styles.text}>{velocity} km/h</Text>
+        </View>
+      </View>
+
+      <View style={styles.footer}>
+        <Button title="Calculate Distance" onPress={calculateTotalDistance} />
       </View>
     </View>
   );
@@ -84,26 +114,69 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#9B9898",
   },
+
+  subContainer: {
+    // flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  clima: {
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    marginLeft: 262,
+    backgroundColor: "#d9d9d9",
+    padding: 16,
+  },
+
+  textoClima: {
+    fontSize: 22,
+  },
+
+  cronometro: {
+    backgroundColor: "#D9D9D9",
+    padding: 32,
+    borderRadius: 24,
+    marginTop: 24,
+    marginBottom: 24,
+  },
+
+  textoCronometro: {
+    fontSize: 24,
+  },
+
   map: {
+    width: 350,
+    height: 350,
+    borderColor: "#FFF",
+  },
+
+  marcadores: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 40,
+    margin: 24,
+  },
+
+  distancia: {
+    backgroundColor: "#D9D9D9",
+    padding: 16,
+  },
+
+  velocidade: {
+    backgroundColor: "#D9D9D9",
+    padding: 16,
+  },
+
+  footer: {
     flex: 1,
-  },
-  buttonContainer: {
+    backgroundColor: "#fff",
     position: "absolute",
-    top: 20,
-    left: 20,
-    zIndex: 1,
-  },
-  distanceContainer: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    zIndex: 1,
-  },
-  distanceText: {
-    fontSize: 18,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    padding: 10,
-    borderRadius: 10,
+    bottom: 40,
+    width: 150,
   },
 });
