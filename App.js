@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions, Button, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Button,
+  Alert,
+  Text,
+} from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import * as Location from "expo-location";
 
@@ -115,60 +122,82 @@ export default function App() {
   return (
     <>
       <View style={styles.container}>
+        <View style={styles.clima}>
+          <Text style={styles.textoClima}>20º</Text>
+        </View>
+
+        <View style={styles.cronometro}>
+          <Text style={styles.textoCronometro}>25:00</Text>
+        </View>
+
         {/* Componente do map */}
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          initialRegion={{
-            latitude: initialLocation
-              ? initialLocation.coords.latitude
-              : -23.55052,
-            longitude: initialLocation
-              ? initialLocation.coords.longitude
-              : -46.633308,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          {/* Marker na Localização Inicial  */}
-          {initialLocation && (
-            <Marker
-              coordinate={{
-                latitude: initialLocation.coords.latitude,
-                longitude: initialLocation.coords.longitude,
-              }}
-              title="Sua Localização Inicial"
-              description="Você começou aqui"
-            />
-          )}
+        <View style={styles.subContainer}>
+          <MapView
+            ref={mapRef}
+            style={styles.map}
+            initialRegion={{
+              latitude: initialLocation
+                ? initialLocation.coords.latitude
+                : -23.55052,
+              longitude: initialLocation
+                ? initialLocation.coords.longitude
+                : -46.633308,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
+            {/* Marker na Localização Inicial  */}
+            {initialLocation && (
+              <Marker
+                coordinate={{
+                  latitude: initialLocation.coords.latitude,
+                  longitude: initialLocation.coords.longitude,
+                }}
+                title="Sua Localização Inicial"
+                description="Você começou aqui"
+              />
+            )}
 
-          {/* Marker na Localização Atual  */}
-          {currentLocation && (
-            <Marker
-              coordinate={{
-                latitude: currentLocation.coords.latitude,
-                longitude: currentLocation.coords.longitude,
-              }}
-              title="Sua Localização Atual"
-              description={`Você andou ${totalDistance.toFixed(
-                2
-              )} km em ${formatTime(elapsedTime)}`}
-              pinColor="blue" // Cor azul para o marcador atual
-            />
-          )}
+            {/* Marker na Localização Atual  */}
+            {currentLocation && (
+              <Marker
+                coordinate={{
+                  latitude: currentLocation.coords.latitude,
+                  longitude: currentLocation.coords.longitude,
+                }}
+                title="Sua Localização Atual"
+                description={`Você andou ${totalDistance.toFixed(
+                  2
+                )} km em ${formatTime(elapsedTime)}`}
+                pinColor="blue" // Cor azul para o marcador atual
+              />
+            )}
 
-          {/* Marcador de percuso */}
-          {coordinates.length > 1 && (
-            <Polyline
-              coordinates={coordinates}
-              strokeColor="rgba(255,0,0,0.5)"
-              strokeWidth={5}
-            />
-          )}
-        </MapView>
+            {/* Marcador de percuso */}
+            {coordinates.length > 1 && (
+              <Polyline
+                coordinates={coordinates}
+                strokeColor="rgba(255,0,0,0.5)"
+                strokeWidth={5}
+              />
+            )}
+          </MapView>
+        </View>
+
+        <View style={styles.marcadores}>
+          <View style={styles.distancia}>
+            <Text>Distancia</Text>
+            <Text>8,5 km</Text>
+          </View>
+
+          <View style={styles.velocidade}>
+            <Text>Velocidade</Text>
+            <Text>20 km/h</Text>
+          </View>
+        </View>
 
         {/* Botão de gravação */}
-        <View style={styles.buttonContainer}>
+        <View style={styles.footer}>
           {isRecording ? (
             <Button title="Parar Gravação" onPress={stopRecording} />
           ) : (
@@ -185,15 +214,67 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F5FCFF",
+    backgroundColor: "#9B9898",
   },
+
+  subContainer: {
+    // flex: 1,
+    backgroundColor: "#fff",
+  },
+
+  clima: {
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    marginLeft: 262,
+    backgroundColor: "#d9d9d9",
+    padding: 16,
+  },
+
+  textoClima: {
+    fontSize: 22,
+  },
+
+  cronometro: {
+    backgroundColor: "#D9D9D9",
+    padding: 32,
+    borderRadius: 24,
+    marginTop: 24,
+    marginBottom: 24,
+  },
+
+  textoCronometro: {
+    fontSize: 24,
+  },
+
   map: {
-    flex: 1,
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
+    width: 350,
+    height: 350,
+    borderColor: "#FFF",
   },
-  buttonContainer: {
+
+  marcadores: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 40,
+    margin: 24,
+  },
+
+  distancia: {
+    backgroundColor: "#D9D9D9",
+    padding: 16,
+  },
+
+  velocidade: {
+    backgroundColor: "#D9D9D9",
+    padding: 16,
+  },
+
+  footer: {
+    flex: 1,
+    backgroundColor: "#fff",
     position: "absolute",
-    bottom: 20,
+    bottom: 40,
+    width: 150,
   },
 });
