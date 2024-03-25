@@ -24,7 +24,7 @@ export default function App() {
 
   // useEffect de permissão e localização inial
   useEffect(() => {
-    (async () => {
+    async function getLocation() {
       // Variavel guardando a permisão
       const { status } = await Location.requestForegroundPermissionsAsync();
 
@@ -38,13 +38,14 @@ export default function App() {
       }
 
       // Obtendo a localização atual
-      const initialLocation = await Location.getCurrentPositionAsync({});
+      let initialLocation = await Location.getCurrentPositionAsync({});
 
       // State para centralização inicial do usuario
       setInitialLocation(initialLocation);
       setCurrentLocation(initialLocation);
-    })();
-  }, []); // Função imediata usada para o Effect funcionar como um async/await ou Função assíncrona IIFE (Immediately Invoked Function Expression)
+    }
+    getLocation();
+  }, []);
 
   // UseEffect com parametro para funcionamento da localização atual
   useEffect(() => {
