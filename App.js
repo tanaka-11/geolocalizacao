@@ -156,6 +156,7 @@ export default function App() {
                 }}
                 title="Sua Localização Inicial"
                 description="Você começou aqui"
+                pinColor="red"
               />
             )}
 
