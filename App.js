@@ -114,10 +114,14 @@ export default function App() {
 
   // Função parar gravação
   const stopRecording = () => {
-    // Atualização dos states
+    // Atualizar states para indicar que a gravação foi parada
     setIsRecording(false);
-    setTotalDistance(0);
-    setElapsedTime(0);
+    setTotalDistance(0); // Zerar a distância total
+    setElapsedTime(0); // Zerar o tempo decorrido
+    setCoordinates([]); // Limpar o array de coordenadas
+
+    // Salvar dados da gravação (opcional)
+    // saveDataToFile();
   };
 
   return (
